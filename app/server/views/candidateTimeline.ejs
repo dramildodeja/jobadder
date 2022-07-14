@@ -1,0 +1,93 @@
+<html>
+    <body>
+        <form name="form1" method="POST" action="/jobApplicationsByJobId">
+        <input type="hidden" name="token" value="<%- token -%>">
+        <table>
+            <tr>
+            <td>Enter Job Id</td>
+            <td><input type="text" name="jobId" ></td>
+            <td><input type="submit" value="Fetch Job Applications KPI Data"></td>
+            </tr>
+        </table>
+        </form>
+        <% if (typeof jobApplicationsByJobId !== 'undefined') { %>
+            <table cellpadding="10" border="1">
+                <tr>
+                    <th>Application Id</th>
+                    <th>Job Id</th>
+                    <th>Job Title</th>
+                    <th>Status</th>
+                    <th>Candidate Name</th>
+                    <th>Managed By</th>
+                    <th>Total Time Lapse</th>
+                </tr>
+                <% for (var i = 0; i < jobApplicationsByJobId.length; i++) { %>
+                    <% if (jobApplicationsByJobId[i].status.name === 'Placed') { %>
+                        <tr style="background:yellow">
+                            <td><a href="/candidateNotes/<%- jobApplicationsByJobId[i].candidate.candidateId -%>/<%- token -%>"><%= jobApplicationsByJobId[i].applicationId %></a></td>
+                    <% } else {%>
+                        <tr>
+                            <td><%= jobApplicationsByJobId[i].applicationId %></td>
+                    <% } %>
+                            <td><%= jobApplicationsByJobId[i].jobReference %></td>
+                            <td><%= jobApplicationsByJobId[i].jobTitle %></td>
+                            <td><%= jobApplicationsByJobId[i].status.name %></td>
+                            <% if (typeof jobApplicationsByJobId[i].candidate !== 'undefined') { %>
+                                <td><%= jobApplicationsByJobId[i].candidate.firstName %>&nbsp;<%= jobApplicationsByJobId[i].candidate.lastName %></td>
+                            <% } else { %>
+                                <td>-</td>
+                            <% } %>
+                            <td><%= jobApplicationsByJobId[i].createdBy.firstName %>&nbsp;<%= jobApplicationsByJobId[i].createdBy.lastName %></td>
+                            <td>-</td>
+                        </tr>
+                <% } %>
+            </table>
+        <% } %>
+        <% if (typeof candidateNotes !== 'undefined') { %>
+            <table id="candidateNotesTable" cellpadding="10">
+                <thead>
+                <tr>
+                    <td>Updated On</td>
+                    <td>Update Type</td>
+                    <td>Update Details</td>
+                    <td>Which Day Of Engagement</td>
+                </tr>
+                </thead>
+                <tbody>
+                <% for (var i = 0; i < candidateNotes.length; i++) { %>
+                    <tr>
+                        <td class="updatedat"><%= candidateNotes[i].updatedAt %></td>
+                        <td><%= candidateNotes[i].type %></td>
+                        <td><%= candidateNotes[i].textPartial %></td>
+                        <td class="timelapsedperstage">1</td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+        <% } %>
+        <% if (typeof error !== 'undefined') { %>
+            <%= error %>
+        <% } %>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+    function logTimeLapsedPerStage() {
+        const noteDateArry = []
+        $("#candidateNotesTable tr:gt(0)").each(function () {
+            let this_row = $(this);
+            let updatedDate = $.trim(this_row.find('td:eq(0)').html());
+            noteDateArry.push(new Date(updatedDate.substr(0,updatedDate.length-1)))
+        });
+        $("#candidateNotesTable tr:gt(0)").each(function (i) {
+            let this_row = $(this);
+            let updatedDate = $.trim(this_row.find('td:eq(0)').html());
+            let dateInTable = new Date(updatedDate.substr(0,updatedDate.length-1))
+            let dateInArry = noteDateArry[0]
+            let Difference_In_Time = dateInTable.getTime() - dateInArry.getTime();
+            let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+            this_row.find('td:eq(3)').html(Difference_In_Days < 1 ? 1 : Difference_In_Days)
+        });
+    }
+    logTimeLapsedPerStage();
+    </script>
+</html>

@@ -1,0 +1,37 @@
+<html>
+    <style>
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      display: grid;
+      justify-items: center;
+      align-items: center;
+    }
+    </style>
+    <body>
+        <p>
+            <a href="https://id.jobadder.com/connect/authorize?response_type=code&client_id=cmss7eboxczubpgyuufooiy6n4&scope=read&redirect_uri=https://dcgla.com/">
+                <img width="200" height="200" src="https://cdn3.iconfinder.com/data/icons/abstract-1/512/authorization-1024.png"/>
+                <br>
+                Click To Authorize
+            </a>
+        </p>
+        <span>
+            <% if (typeof error !== 'undefined') { %>
+                <%= error %>
+            <% } %>
+        </span>
+    </body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script  type="text/javascript">
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.has("code")) {
+    console.log(1)
+    window.location.href="/"+urlParams.get("code");
+}
+</script>
