@@ -7,11 +7,11 @@ module.exports = function(app) {
         const axios = require('axios');
         const qs = require('qs');
         const data = qs.stringify({
-            'client_id': 'cmss7eboxczubpgyuufooiy6n4',
-            'client_secret': 'p5ay7pflpoiu3o64ickrwo4zoqo4tsb2vt7q5upil5iy25sxap3m',
+            'client_id': 'tasnikug5dhe7dprx64miuzj2e',
+            'client_secret': 'p2guzz5iyvquni3d3vd7eblsfy3hw2fhdy6wveppwz27jb3uk3fa',
             'grant_type': 'authorization_code',
             'code': req.params.code,
-            'redirect_uri': 'https://dcgla.com/'
+            'redirect_uri': 'https://jobadder-kpi-reports.herokuapp.com/'
         });
         const config = {
             method: 'post',
