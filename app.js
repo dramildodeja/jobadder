@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-app.set('port', 3000);
+app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/app/server/views');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
