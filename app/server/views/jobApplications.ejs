@@ -1,0 +1,60 @@
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+    <body>
+        <center>
+        <form name="form1" method="POST" action="/jobApplicationsByJobId">
+        <input type="hidden" name="token" value="<%- token -%>">
+        <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
+            <tr class="thead-dark">
+            <td colspan=3>
+                <center>
+                    <input type="text" name="jobId" placeholder="Enter Job Id">
+                    <input type="submit" value="Fetch Job Applications KPI Data">
+                </center>
+            </td>
+            </tr>
+        </table>
+        </form>
+        <% if (typeof jobApplicationsByJobId !== 'undefined') { %>
+            <table cellpadding="10" border="1">
+                <tr>
+                    <th>Application Id</th>
+                    <th>Job Id</th>
+                    <th>Job Title</th>
+                    <th>Current Status</th>
+                    <th>Candidate Name</th>
+                    <th>Managed By</th>
+                    <th>EventType Timeline</th>
+                </tr>
+                <% for (var i = 0; i < jobApplicationsByJobId.length; i++) { %>
+                    <% if (jobApplicationsByJobId[i].status.name === 'Placed') { %>
+                        <tr style="background:yellow">
+                            <td><a target="_blank" href="/candidateNotes/<%- jobApplicationsByJobId[i].candidate.candidateId -%>/<%- token -%>"><%= jobApplicationsByJobId[i].applicationId %></a></td>
+                    <% } else {%>
+                        <tr>
+                            <td><a target="_blank" href="/candidateNotes/<%- jobApplicationsByJobId[i].candidate.candidateId -%>/<%- token -%>"><%= jobApplicationsByJobId[i].applicationId %></a></td>
+                    <% } %>
+                            <td><%= jobApplicationsByJobId[i].jobReference %></td>
+                            <td><%= jobApplicationsByJobId[i].jobTitle %></td>
+                            <td><%= jobApplicationsByJobId[i].status.name %></td>
+                            <% if (typeof jobApplicationsByJobId[i].candidate !== 'undefined') { %>
+                                <td width=10><%= jobApplicationsByJobId[i].candidate.firstName %>&nbsp;<%= jobApplicationsByJobId[i].candidate.lastName %></td>
+                            <% } else { %>
+                                <td>-</td>
+                            <% } %>
+                            <td><%= jobApplicationsByJobId[i].createdBy.firstName %>&nbsp;<%= jobApplicationsByJobId[i].createdBy.lastName %></td>
+                            <td><div id="candidateNotesSnapShot<%- jobApplicationsByJobId[i].candidate.candidateId -%>"></div</td>
+                            <script>
+                                $("#candidateNotesSnapShot<%- jobApplicationsByJobId[i].candidate.candidateId -%>").load("/candidateNotesSnapShot/<%- jobApplicationsByJobId[i].candidate.candidateId -%>/<%- token -%>");
+                            </script>
+                        </tr>
+                <% } %>
+            </table>
+        <% } %>
+        <% if (typeof error !== 'undefined') { %>
+            <%= error %>
+        <% } %>
+        </center>
+    </body>
+</html>
