@@ -11,21 +11,22 @@
                 <center>
                     <input type="text" name="jobId" placeholder="Enter Job Id">
                     <input type="submit" value="Fetch Job Applications KPI Data">
+                    <input type="button" onclick="window.print()" value="Print Me">
                 </center>
             </td>
             </tr>
         </table>
         </form>
         <% if (typeof jobApplicationsByJobId !== 'undefined') { %>
-            <table cellpadding="10" border="1">
+            <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
                 <tr>
-                    <th>Application Id</th>
-                    <th>Job Id</th>
-                    <th>Job Title</th>
-                    <th>Current Status</th>
-                    <th>Candidate Name</th>
-                    <th>Managed By</th>
-                    <th>EventType Timeline</th>
+                    <th style="text-align:center">App Id</th>
+                    <th style="text-align:center">Job Id</th>
+                    <th style="text-align:center">Job Title</th>
+                    <th style="text-align:center">Current Status</th>
+                    <th style="text-align:center">Candidate Name</th>
+                    <th style="text-align:center">Managed By</th>
+                    <th style="text-align:center">EventType Timeline</th>
                 </tr>
                 <% for (var i = 0; i < jobApplicationsByJobId.length; i++) { %>
                     <% if (jobApplicationsByJobId[i].status.name === 'Placed') { %>

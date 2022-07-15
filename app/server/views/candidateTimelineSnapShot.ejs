@@ -2,6 +2,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
     <body>
         <% if (typeof candidateNotes !== 'undefined' && candidateNotes.length > 0) { %>
+            <center>
+                    <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
+                        <tr class="thead-dark">
+                        <td colspan=3>
+                            <center>
+                                <input type="button" onclick="window.print()" value="Print Me">
+                            </center>
+                        </td>
+                        </tr>
+                    </table>
+            </center>
             <table class="table table-bordered table-striped table-responsive-stack" id="candidateNotesTable" cellpadding="3">
                 <thead>
                 <tr>
