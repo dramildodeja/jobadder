@@ -3,21 +3,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
     <body>
         <center>
-        <form name="form1" method="POST" action="/jobApplicationsByJobId">
-        <input type="hidden" name="token" value="<%- token -%>">
+        <form name="jobApplicationsByJobIdForm" id="jobApplicationsByJobIdForm" method="POST" action="/jobApplicationsByJobId">
+        <input type="hidden" name="token" id="token" value="<%- token -%>">
         <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
             <tr class="thead-dark">
             <td colspan=3>
                 <center>
-                    <input type="text" name="jobId" placeholder="Enter Job Id">
-                    <input type="submit" value="Fetch Job Applications KPI Data">
-                    <input type="button" onclick="window.print()" value="Print Me">
+                    <% if (typeof jobApplicationsByJobId !== 'undefined') { %>
+                        <input type="text" name="jobId" value="<%- jobId -%>" alt="Enter Job Id" placeholder="Enter Job Id">
+                    <% } else { %>
+                        <input type="text" name="jobId" alt="Enter Job Id" placeholder="Enter Job Id">
+                    <% } %>
+                    <input type="submit" value="Job Applications By Job Id">
+                    <% if (typeof jobApplicationsByJobId !== 'undefined') { %>
+                        <input type="button" onclick="window.print()" value="Print">
+                    <% } %>
                 </center>
             </td>
             </tr>
         </table>
-        </form>
         <% if (typeof jobApplicationsByJobId !== 'undefined') { %>
+            <span>
+            <input type="hidden" name="first" id="first" value="<%- first -%>">
+            <input type="hidden" name="prev" id="prev" value="<%- prev -%>">
+            <input type="hidden" name="next" id="next" value="<%- next -%>">
+            <input type="hidden" name="last" id="last" value="<%- last -%>">
+            <input type="hidden" name="paginationEventType" id="paginationEventType">
+            <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
+                <tr class="thead-dark">
+                <td colspan=3>
+                    <center>
+                        <a href="javascript:paginationEvent('first')">First</a>
+                        &nbsp;
+                        <a href="javascript:paginationEvent('prev')">Previous</a>
+                        &nbsp;
+                        <a href="javascript:paginationEvent('next')">Next</a>
+                        &nbsp;
+                        <a href="javascript:paginationEvent('last')">Last</a>
+                    </center>
+                </td>
+                </tr>
+            </table>
+            </span>
             <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
                 <tr>
                     <th style="text-align:center">App Id</th>
@@ -47,15 +74,39 @@
                             <td><%= jobApplicationsByJobId[i].createdBy.firstName %>&nbsp;<%= jobApplicationsByJobId[i].createdBy.lastName %></td>
                             <td><div id="candidateNotesSnapShot<%- jobApplicationsByJobId[i].candidate.candidateId -%>"></div</td>
                             <script>
-                                $("#candidateNotesSnapShot<%- jobApplicationsByJobId[i].candidate.candidateId -%>").load("/candidateNotesSnapShot/<%- jobApplicationsByJobId[i].candidate.candidateId -%>/<%- token -%>");
+                                $("#candidateNotesSnapShot<%- jobApplicationsByJobId[i].candidate.candidateId -%>").html("<center><img width='100' height='50' src='https://miro.medium.com/max/1400/1*CsJ05WEGfunYMLGfsT2sXA.gif' /></center>").load("/candidateNotesSnapShot/<%- jobApplicationsByJobId[i].candidate.candidateId -%>/<%- token -%>");
                             </script>
                         </tr>
                 <% } %>
             </table>
+            <span>
+            <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
+                <tr class="thead-dark">
+                <td colspan=3>
+                    <center>
+                        <a href="javascript:paginationEvent('first')">First</a>
+                        &nbsp;
+                        <a href="javascript:paginationEvent('prev')">Previous</a>
+                        &nbsp;
+                        <a href="javascript:paginationEvent('next')">Next</a>
+                        &nbsp;
+                        <a href="javascript:paginationEvent('last')">Last</a>
+                    </center>
+                </td>
+                </tr>
+            </table>
+            </span>
+            </form>
         <% } %>
         <% if (typeof error !== 'undefined') { %>
             <%= error %>
         <% } %>
         </center>
     </body>
+    <script>
+        function paginationEvent(eventType) {
+            $("#paginationEventType").val($("#"+eventType).val());
+            $("#jobApplicationsByJobIdForm").submit();
+        }
+    </script>
 </html>

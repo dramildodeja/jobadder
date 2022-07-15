@@ -1,11 +1,11 @@
 const moment = require('moment');
+const axios = require('axios');
 module.exports = function(app) {
     let access_token = null;
     app.get('/',function(req,res){
         res.render('index')
     });
     app.get('/:code',function(req,res){
-        const axios = require('axios');
         const qs = require('qs');
         const data = qs.stringify({
             'client_id': 'tasnikug5dhe7dprx64miuzj2e',
@@ -38,10 +38,9 @@ module.exports = function(app) {
     });
 
     app.post('/jobApplicationsByJobId',function(req,res){
-        const axios = require('axios');
         const config = {
             method: 'get',
-            url: 'https://api.jobadder.com/v2/jobs/'+req.body.jobId+'/applications',
+            url: req.body.paginationEventType ? req.body.paginationEventType : 'https://api.jobadder.com/v2/jobs/'+req.body.jobId+'/applications?offset=0&limit=5',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer '+req.body.token
@@ -49,15 +48,14 @@ module.exports = function(app) {
         };
         axios(config)
         .then(function (response) {
-            res.render('jobApplications', {jobApplicationsByJobId: response.data.items, token: req.body.token})
+            res.render('jobApplications', {jobApplicationsByJobId: response.data.items, token: req.body.token, jobId:req.body.jobId, first:response.data.links.first, prev:response.data.links.prev, next:response.data.links.next, last:response.data.links.last})
         })
         .catch(function (error) {
-            res.render('jobApplications', {token: req.body.token, error: error})
+            res.render('jobApplications', {token: req.body.token, jobId:req.body.jobId, error: error})
         });
     });
 
     app.get('/candidateNotes/:candidateId/:token',function(req,res){
-        const axios = require('axios');
         const config = {
             method: 'get',
             url: 'https://api.jobadder.com/v2/candidates/'+req.params.candidateId+'/notes',
@@ -90,8 +88,7 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/candidateNotesSnapShot/:candidateId/:token',function(req,res){
-        const axios = require('axios');
+    app.get('/candidateNotesSnapShot/:candidateId/:token',async function(req,res){
         const config = {
             method: 'get',
             url: 'https://api.jobadder.com/v2/candidates/'+req.params.candidateId+'/notes',
@@ -100,7 +97,7 @@ module.exports = function(app) {
                 'Authorization': 'Bearer '+req.params.token
             }
         };
-        axios(config)
+        await axios(config)
         .then(function (response) {
             let items = response.data.items
             items.sort(function(a, b) {
