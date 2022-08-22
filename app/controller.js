@@ -40,7 +40,7 @@ module.exports = function(app) {
     app.post('/jobApplicationsByJobId',function(req,res){
         const config = {
             method: 'get',
-            url: req.body.paginationEventType ? req.body.paginationEventType : 'https://api.jobadder.com/v2/jobs/'+req.body.jobId+'/applications?offset=0&limit=5',
+            url: req.body.paginationEventType ? req.body.paginationEventType : req.body.jobId ? 'https://api.jobadder.com/v2/jobs/'+req.body.jobId+'/applications?offset=0&limit=5' : 'https://api.jobadder.com/v2/jobs/',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer '+req.body.token
@@ -48,10 +48,10 @@ module.exports = function(app) {
         };
         axios(config)
         .then(function (response) {
-            res.render('jobApplications', {jobApplicationsByJobId: response.data.items, token: req.body.token, jobId:req.body.jobId, first:response.data.links.first, prev:response.data.links.prev, next:response.data.links.next, last:response.data.links.last})
+            res.render(req.body.jobId?'jobApplications':'allJobApplications', {jobApplicationsByJobId: response.data.items, token: req.body.token, jobId:req.body.jobId, first:response.data.links.first, prev:response.data.links.prev, next:response.data.links.next, last:response.data.links.last,moment: moment})
         })
         .catch(function (error) {
-            res.render('jobApplications', {token: req.body.token, jobId:req.body.jobId, error: error})
+            res.render(req.body.jobId?'jobApplications':'allJobApplications', {token: req.body.token, jobId:req.body.jobId, error: error,moment: moment})
         });
     });
 
