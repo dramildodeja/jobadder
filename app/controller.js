@@ -8,8 +8,8 @@ module.exports = function(app) {
     app.get('/:code',function(req,res){
         const qs = require('qs');
         const data = qs.stringify({
-            'client_id': 'tasnikug5dhe7dprx64miuzj2e',
-            'client_secret': 'p2guzz5iyvquni3d3vd7eblsfy3hw2fhdy6wveppwz27jb3uk3fa',
+            'client_id': 'client_id',
+            'client_secret': 'client_secret',
             'grant_type': 'authorization_code',
             'code': req.params.code,
             'redirect_uri': 'https://jobadder-kpi-reports.herokuapp.com/'
